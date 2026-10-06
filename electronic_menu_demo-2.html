@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant X — المنيو الإلكتروني</title>
+<style>
+  :root{
+    --navy:#101827;
+    --navy2:#182337;
+    --gold:#c9a45c;
+    --cream:#f7f4ed;
+    --white:#ffffff;
+    --muted:#707784;
+    --line:#e8e5dd;
+    --shadow:0 12px 35px rgba(16,24,39,.08);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Tahoma, Arial, sans-serif;
+    background:#eeeae2;
+    color:var(--navy);
+  }
+  .phone{
+    max-width:520px;
+    margin:auto;
+    min-height:100vh;
+    background:var(--cream);
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:28px 20px 24px;
+    text-align:center;
+  }
+  .logo{
+    width:64px;height:64px;border:1px solid var(--gold);
+    border-radius:50%;margin:0 auto 12px;
+    display:grid;place-items:center;color:var(--gold);
+    font-size:24px;font-weight:bold;
+  }
+  h1{margin:0;font-size:25px}
+  .welcome{margin:7px 0 0;color:#d9dde5;font-size:13px}
+  .lang{
+    margin-top:15px;display:inline-flex;border:1px solid #4b5669;
+    border-radius:20px;overflow:hidden
+  }
+  .lang button{
+    border:0;background:transparent;color:#fff;padding:7px 13px;
+    cursor:pointer
+  }
+  .lang button.active{background:var(--gold);color:var(--navy)}
+  .categories{
+    display:flex;gap:8px;overflow:auto;padding:14px 16px;
+    background:#fff;position:sticky;top:0;z-index:5;
+    box-shadow:0 3px 15px rgba(0,0,0,.05)
+  }
+  .categories button{
+    white-space:nowrap;border:1px solid var(--line);background:#fff;
+    border-radius:22px;padding:9px 15px;color:var(--navy);
+    cursor:pointer
+  }
+  .categories button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  main{padding:20px 16px 100px}
+  .section-title{font-size:20px;margin:8px 3px 14px}
+  .item{
+    display:flex;gap:14px;background:#fff;border-radius:16px;
+    padding:12px;margin-bottom:12px;box-shadow:var(--shadow)
+  }
+  .photo{
+    width:92px;height:92px;border-radius:12px;background:var(--navy2);
+    color:var(--gold);display:grid;place-items:center;flex:none;
+    font-size:30px
+  }
+  .info{flex:1}
+  .name-row{display:flex;justify-content:space-between;gap:8px;align-items:start}
+  .name{font-weight:bold;font-size:16px}
+  .price{font-weight:bold;color:var(--gold);white-space:nowrap}
+  .desc{font-size:12px;line-height:1.7;color:var(--muted);margin-top:7px}
+  .tag{
+    display:inline-block;margin-top:8px;font-size:10px;padding:4px 7px;
+    border-radius:8px;background:#f1eee6;color:#78643e
+  }
+  .contact{
+    position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+    width:min(488px,calc(100% - 32px));background:var(--navy);color:#fff;
+    border-radius:15px;padding:14px;text-align:center;text-decoration:none;
+    box-shadow:0 12px 30px rgba(16,24,39,.25);font-weight:bold
+  }
+  footer{text-align:center;color:var(--muted);font-size:11px;padding:0 20px 30px}
+</style>
+</head>
+<body>
+<div class="phone">
+  <header>
+    <div class="logo">RX</div>
+    <h1>Restaurant X</h1>
+    <div class="welcome">نكهة مميزة، وتجربة تستحق التكرار</div>
+    <div class="lang">
+      <button class="active" onclick="setLang('ar',this)">العربية</button>
+      <button onclick="setLang('en',this)">English</button>
+    </div>
+  </header>
+
+  <nav class="categories">
+    <button class="active" onclick="showCategory('all',this)">الكل</button>
+    <button onclick="showCategory('starters',this)">المقبلات</button>
+    <button onclick="showCategory('main',this)">الأطباق الرئيسية</button>
+    <button onclick="showCategory('drinks',this)">المشروبات</button>
+    <button onclick="showCategory('dessert',this)">الحلويات</button>
+  </nav>
+
+  <main id="menu"></main>
+
+  <footer>منيو إلكتروني • يمكن تحديث الأسعار والأصناف دون تغيير رمز QR</footer>
+</div>
+
+<a class="contact" href="https://wa.me/" target="_blank">تواصل معنا عبر واتساب</a>
+
+<script>
+const items = [
+  {cat:'starters', icon:'🥗', name:'فتوش فلسطيني', price:'15 ₪', desc:'خضار طازجة، خبز محمص وتتبيلة مميزة', tag:'الأكثر طلباً'},
+  {cat:'starters', icon:'🥣', name:'شوربة عدس', price:'12 ₪', desc:'شوربة عدس دافئة محضرة يومياً'},
+  {cat:'main', icon:'🍗', name:'دجاج مشوي', price:'35 ₪', desc:'دجاج متبل ومشوي يقدم مع الأرز والسلطة'},
+  {cat:'main', icon:'🍝', name:'باستا كريمية', price:'30 ₪', desc:'باستا بصوص كريمي مع الأعشاب الطازجة'},
+  {cat:'main', icon:'🍔', name:'برغر المطعم', price:'32 ₪', desc:'قطعة لحم، جبنة، صوص خاص وخضار طازجة', tag:'الأكثر طلباً'},
+  {cat:'drinks', icon:'☕', name:'قهوة عربية', price:'8 ₪', desc:'قهوة عربية محمصة بعناية'},
+  {cat:'drinks', icon:'🥤', name:'مشروب غازي', price:'5 ₪', desc:'اختيارك من المشروبات المتوفرة'},
+  {cat:'dessert', icon:'🍰', name:'تشيز كيك', price:'18 ₪', desc:'تشيز كيك كريمي مع صوص الفواكه'}
+];
+
+const menu = document.getElementById('menu');
+
+function render(filter='all'){
+  const groups = [
+    ['starters','المقبلات'],
+    ['main','الأطباق الرئيسية'],
+    ['drinks','المشروبات'],
+    ['dessert','الحلويات']
+  ];
+  menu.innerHTML='';
+  groups.forEach(([key,title])=>{
+    const data=items.filter(x=>x.cat===key && (filter==='all'||filter===key));
+    if(!data.length)return;
+    const section=document.createElement('section');
+    section.innerHTML='<h2 class="section-title">'+title+'</h2>';
+    data.forEach(x=>{
+      section.innerHTML += `
+      <article class="item">
+        <div class="photo">${x.icon}</div>
+        <div class="info">
+          <div class="name-row">
+            <div class="name">${x.name}</div>
+            <div class="price">${x.price}</div>
+          </div>
+          <div class="desc">${x.desc}</div>
+          ${x.tag?'<span class="tag">'+x.tag+'</span>':''}
+        </div>
+      </article>`;
+    });
+    menu.appendChild(section);
+  });
+}
+function showCategory(cat,btn){
+  document.querySelectorAll('.categories button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render(cat);
+}
+function setLang(lang,btn){
+  document.querySelectorAll('.lang button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  alert(lang==='en'?'English version can be connected to the same menu.':'تم اختيار العربية');
+}
+render();
+</script>
+</body>
+</html>
